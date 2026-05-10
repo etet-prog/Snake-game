@@ -1,0 +1,14 @@
+#parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myCanvas {
+    background-color: #f0f0f0;
+    background-image: 
+        linear-gradient(to right, #000000 1px, transparent 1px),
+        linear-gradient(to bottom, #000000 1px, transparent 1px);
+    background-size: 20px 20px;  
+    border: 2px solid black;
+}
