@@ -9,6 +9,6 @@
     background-image: 
         linear-gradient(to right, #000000 1px, transparent 1px),
         linear-gradient(to bottom, #000000 1px, transparent 1px);
-    background-size: 20px 20px;  
+    background-size: 25px 25px;  
     border: 2px solid black;
 }
