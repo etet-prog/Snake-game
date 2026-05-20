@@ -5,14 +5,17 @@ const GRID_SIZE = 25;
 
 let direction = null;
 let gameLoop = false;
+const SNAKE_COLORS = ["#15803D", "#22C55E", "#4ADE80"];
 
 let snake = [
     {x: 4, y: 11},
     {x: 3, y: 11},
     {x: 2, y: 11}
 ];
-
-const colors = ["#15803D", "#22C55E", "#4ADE80"];
+let food = {
+    x: 15,
+    y: 11
+};
 
 function drawSnake(reset=false) {
     if (reset) {
@@ -29,30 +32,60 @@ function drawSnake(reset=false) {
         const SNAKE_X_DRAW = SNAKE_X * GRID_SIZE + 1;
         const SNAKE_Y_DRAW = SNAKE_Y * GRID_SIZE + 1;
 
-        ctx.fillStyle = colors[i];
+        ctx.fillStyle = SNAKE_COLORS[i];
         ctx.fillRect(SNAKE_X_DRAW, SNAKE_Y_DRAW, GRID_SIZE - 1, GRID_SIZE - 1);
+    }
+}
+
+function drawFood(reset=false) {
+    if (reset) {
+        food = {x: 15, y: 11};
+    }
+    ctx.fillStyle = "red";  
+    ctx.fillRect(food.x * GRID_SIZE + 1, food.y * GRID_SIZE + 1, GRID_SIZE - 1, GRID_SIZE - 1);
+}
+
+function randFoodGenerate() {
+    let newFood = {x: Math.floor(Math.random() * 23) , y: Math.floor(Math.random() * 23)}
+    food = newFood;
+} 
+
+function increaseBody() {
+    const newBody = {x: snake[0].x , y: snake[0].y};
+    snake.unshift(newBody);
+    drawSnake();
+}
+
+function checkFoodEaten() {
+    const SNAKE_HEAD = snake[0]
+    if (SNAKE_HEAD.x === food.x && SNAKE_HEAD.y === food.y) {
+        ctx.clearRect(0, 0, 600, 600);
+        randFoodGenerate();
+        increaseBody();
     }
 }
 
 function directionEvent() {
     document.addEventListener("keydown", (e) => {
-        switch(e.key) {
-            case "w":
-                if (direction !== "DOWN") {
-                    direction = "UP";
-                } break
-            case "a":
-                if (direction !== "RIGHT") {
-                    direction = "LEFT";
-                } break
-            case "s":
-                if (direction !== "UP") {
-                    direction = "DOWN";
-                } break
-            case "d":
-                if (direction !== "LEFT") {
-                    direction = "RIGHT";
-                } break
+        if (['w', 'ArrowUp'].includes(e.key)){
+            if (direction !== "DOWN") {
+                direction = "UP";
+            }
+        }
+        else if (['a', 'ArrowLeft'].includes(e.key)) {
+            if (direction !== "RIGHT") {
+                direction = "LEFT";
+            }
+        }
+        else if (['s', 'ArrowDown'].includes(e.key)) {
+            if (direction !== "UP") {
+                direction = "DOWN";
+            }
+        }
+        else if (['d', 'ArrowRight'].includes(e.key)) {
+            if (direction !== "LEFT") {
+                direction = "RIGHT";
+            }
         }
     })
 }
@@ -77,42 +110,53 @@ function moveSnake() {
     snake.pop();
     ctx.clearRect(0, 0, 600, 600);
     drawSnake();
+    drawFood();
 }
 
 function collision() {
-    gameLoop = false
+    gameLoop = false;
     ctx.clearRect(0, 0, 600, 600);
     direction = null;
-    drawSnake(reset=true)
+    drawSnake(reset=true);
+    drawFood(reset=true);
 }
 
 drawSnake();
+drawFood();
+
 document.addEventListener("keydown", (e) => {
-    if (['w', 's', 'd'].includes(e.key)) {
+    if (['w', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowRight'].includes(e.key)) {
         gameLoop = true
-        switch(e.key) {
-            case "w":
-                if (direction !== "DOWN") {
-                    direction = "UP"
-                } break
-            case "s":
-                if (direction !== "UP") {
-                    direction = "DOWN"
-                } break
-            case "d":
-                if (direction !== "LEFT") { 
-                    direction = "RIGHT"
-                } break
-         }
+        if (['w', 'ArrowUp'].includes(e.key)){
+            if (direction !== "DOWN") {
+                direction = "UP";
+            }
+        }
+        else if (['s', 'ArrowDown'].includes(e.key)) {
+            if (direction !== "UP") {
+                direction = "DOWN";
+            }
+        }
+        else if (['d', 'ArrowRight'].includes(e.key)) {
+            if (direction !== "LEFT") {
+                direction = "RIGHT";
+            }
+        }
     }
 })
 setInterval(() => {
     if (gameLoop) {
-        moveSnake()
-        directionEvent()
+        moveSnake();
+        directionEvent();
+        checkFoodEaten();
+        const checkFood = snake.some(seg => seg.x === food.x && seg.y === food.y);
+        if (checkFood) {
+            food.x = Math.floor(Math.random() * 23);
+            food.y = Math.floor(Math.random() * 23);
+        }
     }
     if (snake[0].x > 23 || snake[0].x < 0 || snake[0].y > 23 || snake[0].y < 0) {
         collision();
-        alert("Game Over!")
+        alert("Game Over!");
     }
-}, 90);
+}, 100);
