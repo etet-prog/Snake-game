@@ -1,14 +1,42 @@
+#head {
+    display: flex;
+}
+
 #parent {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+#play {
+    background-color: #285A48;
+    width: 20vh;
+    height: 10vh;
+    color: #B0E4CC;
+    border: 1px solid #B0E4CC;
+    border-radius: 5px;
+    font-size: medium;
+}
+#pause {
+    background-color: #285A48;
+    color: #B0E4CC;
+    border: 1px solid #B0E4CC;
+    border-radius: 5px;
+    display: none;
+}
+#score {
+    color: #B0E4CC;
+    display: none;
+    font-size: larger;
+    margin: 0;
+    margin-left: 63%;
+}
 
 #myCanvas {
-    background-color: #f0f0f0;
+    display: none;
+    background-color: #285A48;
     background-image: 
-        linear-gradient(to right, #000000 1px, transparent 1px),
-        linear-gradient(to bottom, #000000 1px, transparent 1px);
+        linear-gradient(to right, #091413 1px, transparent 1px),
+        linear-gradient(to bottom, #091413 1px, transparent 1px);
     background-size: 25px 25px;  
-    border: 2px solid black;
+    border: 2px solid #B0E4CC;
 }
